@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rakesh G | AI Engineer & Data Scientist</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            display: ['Space Grotesk', 'sans-serif']
+          },
+          colors: {
+            obsidian: {
+              950: '#03050a',
+              900: '#060a12',
+              850: '#0a0f1d',
+              800: '#0f172a',
+              700: '#1e293b'
+            },
+            ai: {
+              cyan: '#00f2fe',
+              blue: '#4facfe',
+              violet: '#7928ca',
+              magenta: '#b827fc',
+              emerald: '#10b981',
+              neon: '#0df'
+            }
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 25px -5px rgba(0, 242, 254, 0.4)',
+            'glow-violet': '0 0 25px -5px rgba(121, 40, 202, 0.4)',
+            'glass-inset': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.1)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #03050a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+
+    /* Cyber scanline & grid effects */
+    .cyber-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+    
+    .glass-hud {
+      background: rgba(10, 15, 29, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(0, 242, 254, 0.4);
+      transform: translateY(-4px) scale(1.005);
+      box-shadow: 0 20px 40px -15px rgba(0, 242, 254, 0.18);
+    }
+
+    .neon-text-cyan {
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.6), 0 0 30px rgba(0, 242, 254, 0.3);
+    }
+    .neon-text-violet {
+      text-shadow: 0 0 15px rgba(184, 39, 252, 0.6), 0 0 30px rgba(184, 39, 252, 0.3);
+    }
+
+    /* Custom AI Cursor */
+    .custom-cursor {
+      pointer-events: none;
+      position: fixed;
+      width: 24px;
+      height: 24px;
+      border: 1.5px solid #00f2fe;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+      z-index: 9999;
+    }
+    .custom-cursor-dot {
+      pointer-events: none;
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: #00f2fe;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+    }
+    body:hover .custom-cursor { opacity: 1; }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-obsidian-950 text-slate-100 font-sans antialiased overflow-x-hidden cyber-grid selection:bg-ai-cyan selection:text-black">
+
+  <!-- Interactive AI Custom Cursor -->
+  <div id="cursorRing" class="custom-cursor hidden md:block"></div>
+  <div id="cursorDot" class="custom-cursor-dot hidden md:block"></div>
+
+  <!-- Top Real-time Latency & Audio Control Bar -->
+  <div class="fixed top-0 left-0 w-full z-50 bg-obsidian-950/80 backdrop-blur-md border-b border-white/5 py-1 px-4 text-[11px] font-mono text-slate-400 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <span class="flex items-center gap-1.5 text-emerald-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>NEURAL ENGINE ONLINE</span>
+      </span>
+      <span class="hidden sm:inline-block text-slate-600">|</span>
+      <span class="hidden sm:inline-flex items-center gap-1 text-slate-300">
+        <i data-lucide="activity" class="w-3 h-3 text-ai-cyan"></i>
+        <span>LATENCY: <strong class="text-ai-cyan" id="livePing">12ms</strong></span>
+      </span>
+      <span class="hidden md:inline-block text-slate-600">|</span>
+      <span class="hidden md:inline-flex items-center gap-1 text-slate-300">
+        <i data-lucide="cpu" class="w-3 h-3 text-ai-violet"></i>
+        <span>FP16 TENSOR CORE ACTIVE</span>
+      </span>
+    </div>
+
+    <!-- Right Controls: Audio Synth Toggle + IST Clock -->
+    <div class="flex items-center gap-3">
+      <button id="audioToggle" onclick="toggleAudio()" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-300 hover:text-ai-cyan transition flex items-center gap-1">
+        <i data-lucide="volume-2" id="audioIcon" class="w-3 h-3"></i>
+        <span id="audioStateText">SFX: ON</span>
+      </button>
+      <span class="text-slate-600">|</span>
+      <span id="liveClock" class="text-ai-cyan font-semibold">IST 00:00:00</span>
+    </div>
+  </div>
+
+  <header class="fixed top-8 left-0 w-full z-40 px-4 py-3 transition-all duration-300" id="mainHeader">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-5 py-2.5 rounded-2xl glass-hud shadow-2xl shadow-black/80">
+      <!-- Brand Logo -->
+      <a href="#" onclick="playBlip(600)" class="flex items-center gap-3 group">
+        <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-ai-cyan via-ai-blue to-ai-violet p-[1px] group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-obsidian-950 rounded-[11px] flex items-center justify-center font-mono font-black text-ai-cyan tracking-tighter">
+            RG
+          </div>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-ai-cyan rounded-full animate-ping"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-base tracking-tight text-white group-hover:text-ai-cyan transition-colors">
+              Rakesh G
+            </span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan">AI // DS</span>
+          </div>
+          <p class="text-[10px] font-mono text-slate-400">PMIST • M.Sc. Data Science</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-1 font-mono text-xs text-slate-300">
+        <a href="#about" onclick="playBlip(520)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">01//About</a>
+        <a href="#expertise" onclick="playBlip(540)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">02//Expertise</a>
+        <a href="#education" onclick="playBlip(560)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">03//Education</a>
+        <a href="#experience" onclick="playBlip(580)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">04//Experience</a>
+        <a href="#credentials" onclick="playBlip(600)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">05//Credentials</a>
+        <a href="#portfolio" onclick="playBlip(620)" class="px-3 py-1.5 rounded-lg hover:text-ai-cyan hover:bg-white/5 transition">06//Projects</a>
+        <a href="#lab" onclick="playBlip(640)" class="px-3 py-1.5 rounded-lg text-ai-cyan hover:bg-ai-cyan/10 border border-ai-cyan/20 transition flex items-center gap-1">
+          <i data-lucide="terminal" class="w-3 h-3"></i>
+          <span>ML Lab</span>
+        </a>
+      </nav>
+
+      <!-- Action Button & Copilot Trigger -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="toggleTerminal(); playBlip(750);" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-ai-violet to-ai-magenta text-white font-mono text-xs font-semibold hover:shadow-glow-violet transition flex items-center gap-1.5 active:scale-95">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">RAKESH-GPT</span>
+          <span class="sm:hidden">AI</span>
+        </button>
+        <a href="#contact" onclick="playBlip(700)" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-ai-cyan to-ai-blue text-black font-mono text-xs font-bold hover:shadow-glow-cyan transition flex items-center gap-1 active:scale-95">
+          <span>Connect</span>
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+        </a>
+        <button id="mobileMenuBtn" class="lg:hidden p-2 text-slate-300 hover:text-white" aria-label="Toggle Navigation">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 p-4 rounded-2xl glass-hud border border-white/10 flex flex-col gap-2 font-mono text-xs text-slate-300">
+      <a href="#about" class="py-2 px-3 hover:bg-white/5 rounded-lg">01 // About</a>
+      <a href="#expertise" class="py-2 px-3 hover:bg-white/5 rounded-lg">02 // Expertise</a>
+      <a href="#education" class="py-2 px-3 hover:bg-white/5 rounded-lg">03 // Education</a>
+      <a href="#experience" class="py-2 px-3 hover:bg-white/5 rounded-lg">04 // 4 Internships</a>
+      <a href="#credentials" class="py-2 px-3 hover:bg-white/5 rounded-lg">05 // Credentials</a>
+      <a href="#portfolio" class="py-2 px-3 hover:bg-white/5 rounded-lg">06 // Portfolio</a>
+      <a href="#lab" class="py-2 px-3 text-ai-cyan hover:bg-ai-cyan/10 rounded-lg">Interactive ML Lab</a>
+      <a href="#contact" class="py-2 px-3 hover:bg-white/5 rounded-lg">07 // Contact</a>
+    </div>
+  </header>
+
+  <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 overflow-hidden" id="hero">
+    <!-- 3D Three.js Canvas Container -->
+    <div id="threeContainer" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0"></div>
+
+    <!-- Ambient Gradients -->
+    <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/60 to-transparent pointer-events-none z-10"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#03050a_85%)] pointer-events-none z-10"></div>
+
+    <!-- Hero Content Overlay -->
+    <div class="relative z-20 max-w-5xl mx-auto text-center space-y-7 pointer-events-none mt-10">
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-obsidian-900/90 border border-ai-cyan/30 text-ai-cyan text-xs font-mono shadow-glow-cyan pointer-events-auto backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-ai-cyan animate-ping"></span>
+        <span class="tracking-wide">OPEN TO OPPORTUNITIES • READY FOR DEPLOYMENT</span>
+      </div>
+
+      <!-- Main Headline -->
+      <div class="space-y-4">
+        <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-white leading-none">
+          ENGINEERING <br class="hidden sm:inline">
+          <span class="bg-gradient-to-r from-ai-cyan via-ai-blue to-ai-magenta bg-clip-text text-transparent neon-text-cyan">
+            INTELLIGENT
+          </span> SYSTEMS
+        </h1>
+        <p class="text-lg sm:text-2xl font-mono text-slate-300 font-normal tracking-tight">
+          Rakesh G <span class="text-slate-500">//</span> Aspiring Data Scientist & AI Engineer
+        </p>
+        <p class="max-w-2xl mx-auto text-sm sm:text-base text-slate-400 font-sans leading-relaxed">
+          Specializing in predictive modeling, deep reinforcement learning, and natural language understanding — converting complex telemetry into verifiable strategic impact.
+        </p>
+      </div>
+
+      <!-- Hero Call-to-Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-3 pointer-events-auto">
+        <a href="#lab" onclick="playBlip(700)" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-ai-cyan to-ai-blue text-black font-mono font-bold text-xs tracking-wider uppercase hover:shadow-glow-cyan transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+          <i data-lucide="play" class="w-4 h-4 fill-black"></i>
+          <span>Launch AI Model Lab</span>
+        </a>
+        <a href="#portfolio" onclick="playBlip(620)" class="px-6 py-3.5 rounded-2xl glass-card text-white font-mono font-semibold text-xs tracking-wider uppercase hover:border-ai-cyan/40 transition-all flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4 text-ai-cyan"></i>
+          <span>Inspect 5+ Projects</span>
+        </a>
+        <button onclick="toggleTerminal(); playBlip(800);" class="px-6 py-3.5 rounded-2xl bg-ai-violet/20 border border-ai-violet/40 text-purple-300 font-mono font-semibold text-xs tracking-wider uppercase hover:bg-ai-violet/30 transition-all flex items-center gap-2">
+          <i data-lucide="bot" class="w-4 h-4 text-ai-magenta"></i>
+          <span>Ask RAKESH-GPT</span>
+        </button>
+      </div>
+
+      <!-- Real-time HUD Metrics Strip -->
+      <div class="pt-8 max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 pointer-events-auto">
+        <div class="glass-card p-4 rounded-2xl border-white/5 text-center">
+          <div class="text-2xl sm:text-3xl font-mono font-bold text-ai-cyan" id="statProjects">5+</div>
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-widest mt-1">Shipped Projects</div>
+          <div class="text-[9px] font-mono text-ai-cyan/70 mt-0.5">LSTM • PPO • NLP • ETL</div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border-white/5 text-center">
+          <div class="text-2xl sm:text-3xl font-mono font-bold text-ai-blue" id="statInternships">4</div>
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-widest mt-1">Industry Internships</div>
+          <div class="text-[9px] font-mono text-ai-blue/70 mt-0.5">Bosch Rexroth • Vaseegrah +</div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border-white/5 text-center">
+          <div class="text-2xl sm:text-3xl font-mono font-bold text-ai-violet" id="statCgpa">8.8</div>
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-widest mt-1">M.Sc. CGPA</div>
+          <div class="text-[9px] font-mono text-ai-violet/70 mt-0.5">PMIST High Honors Baseline</div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border-white/5 text-center">
+          <div class="text-2xl sm:text-3xl font-mono font-bold text-emerald-400">1,024</div>
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-widest mt-1">Latent Nodes</div>
+          <div class="text-[9px] font-mono text-emerald-400/70 mt-0.5">Three.js Constellation</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-950/80">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>01 // ABOUT PROFILE</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Data Science & Neural Engineering
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-md text-right md:text-left">
+          Transforming multidimensional data patterns into production-grade predictive intelligence.
+        </p>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <!-- Left: Bio & Academic Distinction -->
+        <div class="lg:col-span-7 glass-hud p-8 rounded-3xl space-y-6 flex flex-col justify-between">
+          <div class="space-y-4 text-slate-300 leading-relaxed font-sans text-sm sm:text-base">
+            <p>
+              I am a results-driven <strong class="text-ai-cyan font-semibold">M.Sc. Data Science candidate at Periyar Maniammai Institute of Science & Technology (PMIST)</strong> with a proven track record in architecting high-performance predictive models.
+            </p>
+            <p>
+              My deep technical core encompasses <strong class="text-white">time-series forecasting using multi-layer LSTM networks</strong>, <strong class="text-white">natural language processing (VADER, sentiment extraction, TF-IDF feature selection)</strong>, and <strong class="text-white">deep reinforcement learning agents trained with Proximal Policy Optimization (PPO)</strong>.
+            </p>
+            <p>
+              Having completed <strong class="text-ai-blue">4 industry internships</strong>—including industrial IoT telemetry analytics at <span class="text-emerald-400 font-mono">Rexroth Bosch Group</span> and operational dashboard design at <span class="text-ai-cyan font-mono">Tech Vaseegrah</span>—I maintain an academic baseline of <strong class="text-ai-violet font-mono">8.8 CGPA</strong> while constantly deploying standalone AI applications.
+            </p>
+          </div>
+
+          <!-- Quick Highlight Pills -->
+          <div class="grid grid-cols-3 gap-3 pt-6 border-t border-white/10 text-center font-mono">
+            <div class="bg-obsidian-900/80 p-3 rounded-2xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">Governance</span>
+              <span class="text-xs sm:text-sm font-bold text-ai-cyan">Dept. President</span>
+            </div>
+            <div class="bg-obsidian-900/80 p-3 rounded-2xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">Specialization</span>
+              <span class="text-xs sm:text-sm font-bold text-ai-blue">Deep RL & Time-Series</span>
+            </div>
+            <div class="bg-obsidian-900/80 p-3 rounded-2xl border border-white/5">
+              <span class="text-[10px] text-slate-400 block">Location Bias</span>
+              <span class="text-xs sm:text-sm font-bold text-emerald-400">India (IST)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Neural Focus Pillars -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="glass-card p-6 rounded-3xl space-y-2 group">
+            <div class="flex items-center gap-3">
+              <div class="p-3 rounded-2xl bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan group-hover:scale-110 transition-transform">
+                <i data-lucide="network" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-white text-base">Deep Reinforcement Learning</h3>
+                <span class="text-[11px] font-mono text-ai-cyan">Markov Decision Processes & PPO</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed font-sans pt-1">
+              Custom reward formulation, 2D continuous action physics simulations (Pymunk), and policy optimization for vehicle dynamics.
+            </p>
+          </div>
+
+          <div class="glass-card p-6 rounded-3xl space-y-2 group">
+            <div class="flex items-center gap-3">
+              <div class="p-3 rounded-2xl bg-ai-blue/10 border border-ai-blue/30 text-ai-blue group-hover:scale-110 transition-transform">
+                <i data-lucide="trending-up" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-white text-base">Sequence Modeling & Forecasters</h3>
+                <span class="text-[11px] font-mono text-ai-blue">Recurrent LSTM & Attention Models</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed font-sans pt-1">
+              Non-linear multi-variate financial cycle forecasting, industrial IoT vibration telemetry, and equipment failure prevention.
+            </p>
+          </div>
+
+          <div class="glass-card p-6 rounded-3xl space-y-2 group">
+            <div class="flex items-center gap-3">
+              <div class="p-3 rounded-2xl bg-ai-violet/10 border border-ai-violet/30 text-ai-violet group-hover:scale-110 transition-transform">
+                <i data-lucide="database" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-white text-base">Data Pipeline Engineering</h3>
+                <span class="text-[11px] font-mono text-ai-violet">ETL Pipelines & Schemas</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed font-sans pt-1">
+              Star & Snowflake schemas, Graph databases (Neo4j), automated ETL orchestrations, and interactive BI reporting dashboards.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="expertise" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-900/40">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>02 // EXPERTISE</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Technical Architecture & Stack
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-md">
+          End-to-end tooling across mathematical formulation, neural training, and enterprise visualization.
+        </p>
+      </div>
+
+      <!-- Bento Grid (3 Main Categories) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1: Programming & Languages -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative overflow-hidden flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-ai-cyan">
+                <i data-lucide="code-2" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300">CORE ENGINES</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">Programming</h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Pipelines to front-end interfaces</p>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-ai-cyan/30 text-ai-cyan font-mono text-xs">Python</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs">R Language</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-emerald-500/30 text-emerald-400 font-mono text-xs">SQL</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-yellow-500/30 text-yellow-300 font-mono text-xs">JavaScript (ES6+)</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs">HTML5 / CSS3</span>
+            </div>
+          </div>
+          <div class="mt-8 pt-4 border-t border-white/10 space-y-2">
+            <div class="flex justify-between text-xs font-mono text-slate-300">
+              <span>Python Ecosystem & NumPy</span>
+              <span class="text-ai-cyan font-bold">96%</span>
+            </div>
+            <div class="w-full bg-obsidian-950 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-ai-cyan to-ai-blue h-full rounded-full" style="width: 96%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: AI & Machine Learning -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative overflow-hidden flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="p-3 rounded-2xl bg-ai-blue/10 border border-ai-blue/30 text-ai-blue">
+                <i data-lucide="cpu" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300">INTELLIGENCE</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">AI & Machine Learning</h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Deep recurrent & reinforcement models</p>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-ai-blue/30 text-ai-blue font-mono text-xs">LSTM Networks</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-ai-magenta/30 text-purple-300 font-mono text-xs">Deep RL (PPO)</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-emerald-500/30 text-emerald-400 font-mono text-xs">NLP / NLU (VADER)</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs">TensorFlow</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs">Scikit-learn</span>
+            </div>
+          </div>
+          <div class="mt-8 pt-4 border-t border-white/10 space-y-2">
+            <div class="flex justify-between text-xs font-mono text-slate-300">
+              <span>Deep Learning Optimization</span>
+              <span class="text-ai-blue font-bold">92%</span>
+            </div>
+            <div class="w-full bg-obsidian-950 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-ai-blue to-ai-violet h-full rounded-full" style="width: 92%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Data Engineering -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative overflow-hidden flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="p-3 rounded-2xl bg-ai-violet/10 border border-ai-violet/30 text-ai-violet">
+                <i data-lucide="server" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300">INFRASTRUCTURE</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">Data Engineering</h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Scalable schemas & data pipelines</p>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-ai-violet/30 text-ai-violet font-mono text-xs">Neo4j (Graph DB)</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-ai-cyan/30 text-ai-cyan font-mono text-xs">ETL / ELT Pipelines</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-yellow-500/30 text-yellow-300 font-mono text-xs">Power BI</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-emerald-500/30 text-emerald-400 font-mono text-xs">Advanced Excel</span>
+              <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs">SQLite / SQL</span>
+            </div>
+          </div>
+          <div class="mt-8 pt-4 border-t border-white/10 space-y-2">
+            <div class="flex justify-between text-xs font-mono text-slate-300">
+              <span>Dimensional Data Warehousing</span>
+              <span class="text-ai-violet font-bold">89%</span>
+            </div>
+            <div class="w-full bg-obsidian-950 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-ai-violet to-ai-magenta h-full rounded-full" style="width: 89%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-950/80">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>03 // EDUCATION</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Academic Background
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-md">
+          Formal university curriculum across advanced transformer models and statistical foundations.
+        </p>
+      </div>
+
+      <!-- Chronological Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Master of Science -->
+        <div class="glass-card p-8 rounded-3xl border-l-4 border-l-ai-cyan relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan font-mono text-xs">
+                Jul 2025 – Present
+              </span>
+              <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Active Post-Grad
+              </span>
+            </div>
+            <div>
+              <h3 class="text-2xl font-display font-bold text-white">M.Sc. in Data Science</h3>
+              <p class="text-sm font-semibold text-slate-300 mt-0.5">Periyar Maniammai Institute of Science & Technology (PMIST)</p>
+            </div>
+            <div class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <p class="flex items-start gap-2">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-ai-cyan shrink-0 mt-0.5"></i>
+                <span>Advanced coursework in <strong class="text-white">Transformer architectures, LLMs</strong>, and deep learning hyperparameter optimization.</span>
+              </p>
+              <p class="flex items-start gap-2">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-ai-cyan shrink-0 mt-0.5"></i>
+                <span>Academic research concentration on predictive analytics, temporal sequence modeling, and attention-based NLP.</span>
+              </p>
+            </div>
+          </div>
+          <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between font-mono">
+            <span class="text-xs text-slate-400">Current Academic Cumulative</span>
+            <span class="text-xl font-bold text-ai-cyan">8.8 / 10.0 CGPA</span>
+          </div>
+        </div>
+
+        <!-- Bachelor of Science -->
+        <div class="glass-card p-8 rounded-3xl border-l-4 border-l-ai-blue relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-ai-blue/10 border border-ai-blue/30 text-ai-blue font-mono text-xs">
+                Aug 2022 – May 2025
+              </span>
+              <span class="text-xs font-mono text-slate-400">Graduated</span>
+            </div>
+            <div>
+              <h3 class="text-2xl font-display font-bold text-white">B.Sc. in Data Science</h3>
+              <p class="text-sm font-semibold text-slate-300 mt-0.5">Periyar Maniammai Institute of Science & Technology (PMIST)</p>
+            </div>
+            <div class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <p class="flex items-start gap-2">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-ai-blue shrink-0 mt-0.5"></i>
+                <span>Mathematical foundation in probability distributions, multivariable calculus, linear algebra, and data structures.</span>
+              </p>
+              <p class="flex items-start gap-2">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-ai-blue shrink-0 mt-0.5"></i>
+                <span>Specialized in relational database optimization, ETL data pipelines, and <strong class="text-white">Star/Snowflake warehouse schemas</strong>.</span>
+              </p>
+            </div>
+          </div>
+          <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between font-mono">
+            <span class="text-xs text-slate-400">Graduation Cumulative</span>
+            <span class="text-xl font-bold text-ai-blue">7.51 / 10.0 CGPA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-900/50">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>04 // EXPERIENCE</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            4 Industry Internships
+          </h2>
+        </div>
+        <div class="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs flex items-center gap-1.5">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+          <span>Production Machine Learning & Predictive Pipelines</span>
+        </div>
+      </div>
+
+      <!-- 4 Internship Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Internship 1: Rexroth Bosch Group -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono px-3 py-1 rounded-lg bg-ai-cyan/10 text-ai-cyan border border-ai-cyan/20">
+                Dec 2024 – Jan 2025
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">INDUSTRIAL IoT</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">AI & Machine Learning Trainee</h3>
+              <h4 class="text-sm font-semibold text-emerald-400 font-mono mt-0.5">Rexroth Bosch Group</h4>
+            </div>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-cyan shrink-0 mt-1"></i>
+                <span>Formulated and applied deep learning architectures to industrial IoT sensor data for predictive maintenance.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-cyan shrink-0 mt-1"></i>
+                <span>Trained regression and classification models to isolate failure precursors, directly curbing unplanned equipment downtime.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5 font-mono text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">Python</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">IoT Telemetry</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-emerald-400">Deep Learning</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">Sensor Fusion</span>
+          </div>
+        </div>
+
+        <!-- Internship 2: Tech Vaseegrah -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono px-3 py-1 rounded-lg bg-ai-blue/10 text-ai-blue border border-ai-blue/20">
+                Jul 2024 – Aug 2024
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">BUSINESS INTELLIGENCE</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">Data Analyst Intern</h3>
+              <h4 class="text-sm font-semibold text-ai-blue font-mono mt-0.5">Tech Vaseegrah</h4>
+            </div>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-blue shrink-0 mt-1"></i>
+                <span>Conducted comprehensive exploratory data analysis (EDA) on business logs using Python, Excel, and SQL queries.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-blue shrink-0 mt-1"></i>
+                <span>Architected a Flask-based billing dashboard that automated internal financial metrics and cut reporting turnaround.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5 font-mono text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-blue">Flask</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">SQL Analytics</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-yellow-300">EDA</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">Reporting</span>
+          </div>
+        </div>
+
+        <!-- Internship 3: ESOL Technologies -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono px-3 py-1 rounded-lg bg-ai-violet/10 text-ai-violet border border-ai-violet/20">
+                May 2026 – Present
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">PREDICTIVE AGENTS</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">Data Science & ML Intern</h3>
+              <h4 class="text-sm font-semibold text-ai-violet font-mono mt-0.5">ESOL Technologies</h4>
+            </div>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-violet shrink-0 mt-1"></i>
+                <span>Developed customized prediction agents and fine-tuned Scikit-learn classification models for internal automation.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-ai-violet shrink-0 mt-1"></i>
+                <span>Constructed low-latency inference pipelines with automated validation filters to ensure consistent output quality.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5 font-mono text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-violet">Scikit-learn</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">Agentic AI</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">Model Deployment</span>
+          </div>
+        </div>
+
+        <!-- Internship 4: Abstrabit Technologies -->
+        <div class="glass-card p-7 rounded-3xl border-white/5 relative flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                2025
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">FULL STACK PIPELINES</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-display font-bold text-white">Full Stack & Analytics Intern</h3>
+              <h4 class="text-sm font-semibold text-emerald-400 font-mono mt-0.5">Abstrabit Technologies</h4>
+            </div>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-1"></i>
+                <span>Engineered comprehensive data flows bridging backend SQLite transactional stores to responsive dashboard widgets.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-1"></i>
+                <span>Optimized query patterns to deliver sub-second data aggregation for interactive web visualization cards.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5 font-mono text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-emerald-400">SQLite</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">Chart.js</span>
+            <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-blue">Data Pipelines</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="credentials" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-950/80">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>05 // CREDENTIALS</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Leadership & Certifications
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-md">
+          Demonstrated administrative governance and technical accreditations.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left: Leadership Role Cards -->
+        <div class="lg:col-span-5 glass-hud p-7 rounded-3xl space-y-6">
+          <div class="flex items-center gap-3">
+            <div class="p-3 rounded-2xl bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan">
+              <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-white text-lg">Department Leadership</h3>
+              <p class="text-xs font-mono text-ai-cyan">Dept. of Informatics, PMIST</p>
+            </div>
+          </div>
+
+          <div class="space-y-4 font-mono text-xs">
+            <div class="p-4 rounded-2xl bg-obsidian-900 border border-white/5 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white text-sm">Department President</span>
+                <span class="px-2 py-0.5 rounded bg-ai-cyan/20 text-ai-cyan text-[10px]">ELECTED</span>
+              </div>
+              <p class="text-slate-400 font-sans leading-relaxed">
+                Led departmental symposia, directed research workshops, and officially represented the student body in university academic councils.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-obsidian-900 border border-white/5 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white text-sm">Class Representative</span>
+                <span class="px-2 py-0.5 rounded bg-ai-blue/20 text-ai-blue text-[10px]">60+ COHORT</span>
+              </div>
+              <p class="text-slate-400 font-sans leading-relaxed">
+                Coordinated technical bootcamps, managed faculty-student communication pipelines, and organized hands-on coding competitions.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Verified Certifications Grid -->
+        <div class="lg:col-span-7 glass-card p-7 rounded-3xl space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="p-3 rounded-2xl bg-ai-violet/10 border border-ai-violet/30 text-ai-violet">
+                <i data-lucide="award" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-white text-lg">Verified Certifications</h3>
+                <p class="text-xs font-mono text-ai-violet">Analytics & Data Architecture Specializations</p>
+              </div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">7 Badges</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-ai-cyan/40 transition">
+              <span class="text-[10px] font-mono text-ai-cyan">Jul 2024 • Google</span>
+              <h4 class="text-xs font-semibold text-white mt-1">Google Analytics for Beginners</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Analytics Academy (Google)</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-ai-cyan/40 transition">
+              <span class="text-[10px] font-mono text-ai-cyan">Jul 2024 • Google</span>
+              <h4 class="text-xs font-semibold text-white mt-1">Advanced Google Analytics</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Custom Dashboards & Segments</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-emerald-500/40 transition">
+              <span class="text-[10px] font-mono text-emerald-400">Sep 2024 • Cognitive Class</span>
+              <h4 class="text-xs font-semibold text-white mt-1">Data Analysis with Python</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Statistical Modeling & Pandas</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-emerald-500/40 transition">
+              <span class="text-[10px] font-mono text-emerald-400">Jul 2025 • MongoDB</span>
+              <h4 class="text-xs font-semibold text-white mt-1">MongoDB Basics & Aggregations</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Document Store Architecture</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-ai-violet/40 transition">
+              <span class="text-[10px] font-mono text-ai-violet">Dec 2025 • DL Workshop</span>
+              <h4 class="text-xs font-semibold text-white mt-1">Neurons to Networks</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Deep Learning Specialization</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950/80 border border-white/5 hover:border-ai-violet/40 transition">
+              <span class="text-[10px] font-mono text-ai-violet">Feb 2026 • HP LIFE</span>
+              <h4 class="text-xs font-semibold text-white mt-1">Data Science & Analytics</h4>
+              <p class="text-[11px] font-mono text-slate-400 mt-1">Predictive Strategy Modeling</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-900/50">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header & Filter Tabs -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>06 // PORTFOLIO</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Shipped AI & Data Systems
+          </h2>
+        </div>
+
+        <!-- Filter buttons -->
+        <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-obsidian-950 border border-white/10 text-xs font-mono">
+          <button onclick="filterProjects('all', this)" class="proj-filter active px-3.5 py-1.5 rounded-xl bg-ai-cyan text-black font-bold transition">All (5)</button>
+          <button onclick="filterProjects('ml', this)" class="proj-filter px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition">ML & Deep Learning</button>
+          <button onclick="filterProjects('rl', this)" class="proj-filter px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition">Reinforcement Learning</button>
+          <button onclick="filterProjects('nlp', this)" class="proj-filter px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition">NLP & Sentiment</button>
+          <button onclick="filterProjects('fullstack', this)" class="proj-filter px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition">Full Stack ETL</button>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
+        <!-- Project 1: Stock Market Forecasting with LSTM -->
+        <div class="project-box glass-card p-6 rounded-3xl flex flex-col justify-between space-y-6" data-cat="ml">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="p-2.5 rounded-xl bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan">FinTech</span>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white">Stock Market Forecasting with LSTM</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
+              Engineered a multi-layer stacked LSTM network to model complex non-linear temporal dynamics in financial cycles. Trained on 5+ years of historical data to generate robust multi-step price projections.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">Python</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-blue">LSTM</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-emerald-400">TensorFlow</span>
+            </div>
+            <button onclick="launchLab('lstm'); playBlip(750);" class="w-full py-2.5 rounded-xl bg-ai-cyan/10 hover:bg-ai-cyan/20 border border-ai-cyan/30 text-ai-cyan text-xs font-mono font-bold flex items-center justify-center gap-2 transition">
+              <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+              <span>Simulate Model In Lab</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Project 2: Neural Pilot — Hill Climb AI (Deep RL) -->
+        <div class="project-box glass-card p-6 rounded-3xl flex flex-col justify-between space-y-6" data-cat="rl">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                <i data-lucide="bot" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Deep RL</span>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white">Neural Pilot — Autonomous Hill Climb AI</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
+              Architected an autonomous vehicle agent powered by Proximal Policy Optimization (PPO). The agent learns throttle regulation, suspension balance, and crest negotiation within a 2D continuous physics environment.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-emerald-400">Deep RL (PPO)</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">Pymunk 2D</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-purple-300">Reward Shaping</span>
+            </div>
+            <button onclick="launchLab('rl'); playBlip(750);" class="w-full py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center justify-center gap-2 transition">
+              <i data-lucide="play" class="w-3.5 h-3.5"></i>
+              <span>Watch Live Policy Rollout</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Project 3: Menu vs Delivery — NLP Sentiment Analysis -->
+        <div class="project-box glass-card p-6 rounded-3xl flex flex-col justify-between space-y-6" data-cat="nlp">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="p-2.5 rounded-xl bg-ai-magenta/10 border border-ai-magenta/30 text-ai-magenta">
+                <i data-lucide="message-square-quote" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-ai-magenta/10 border border-ai-magenta/30 text-ai-magenta">NLP Analytics</span>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white">Menu vs. Delivery — NLP Sentiment</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
+              Constructed an NLP analytics pipeline parsing thousands of consumer reviews. Separates food satisfaction from delivery latency friction using lemmatization, TF-IDF vectorization, and VADER scoring.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-magenta">VADER Sentiment</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">TF-IDF</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-yellow-300">Tokenization</span>
+            </div>
+            <button onclick="launchLab('nlp'); playBlip(750);" class="w-full py-2.5 rounded-xl bg-ai-magenta/10 hover:bg-ai-magenta/20 border border-ai-magenta/30 text-ai-magenta text-xs font-mono font-bold flex items-center justify-center gap-2 transition">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Test Live Inference</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Project 4: Personal Finance Dashboard -->
+        <div class="project-box glass-card p-6 rounded-3xl flex flex-col justify-between space-y-6" data-cat="fullstack">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="p-2.5 rounded-xl bg-ai-blue/10 border border-ai-blue/30 text-ai-blue">
+                <i data-lucide="pie-chart" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-ai-blue/10 border border-ai-blue/30 text-ai-blue">Full Stack ETL</span>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white">Personal Finance Dashboard</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
+              End-to-end full stack web application incorporating ETL pipelines to parse disparate financial transaction files into normalized schemas, featuring categorical budgeting and trend visualizations.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-blue">Flask</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-emerald-400">SQLite</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">Chart.js</span>
+            </div>
+            <a href="https://github.com/Rakesh-developer28" target="_blank" onclick="playBlip(600)" class="w-full py-2.5 rounded-xl bg-obsidian-950 hover:bg-white/5 border border-white/10 text-slate-300 text-xs font-mono font-semibold flex items-center justify-center gap-2 transition">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              <span>View Source on GitHub</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 5: Fake Review Detection System -->
+        <div class="project-box glass-card p-6 rounded-3xl flex flex-col justify-between space-y-6" data-cat="nlp">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30 text-rose-400">AI Security</span>
+            </div>
+            <h3 class="text-xl font-display font-bold text-white">Fake Review Detection System</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
+              Supervised classification pipeline engineered to uncover deceptive product reviews. Implemented custom text cleanups, n-gram TF-IDF representations, and balanced precision-recall trade-offs.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-rose-400">Supervised ML</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-ai-cyan">TF-IDF</span>
+              <span class="px-2 py-0.5 rounded bg-obsidian-950 text-slate-300">PR Optimization</span>
+            </div>
+            <a href="https://github.com/Rakesh-developer28" target="_blank" onclick="playBlip(600)" class="w-full py-2.5 rounded-xl bg-obsidian-950 hover:bg-white/5 border border-white/10 text-slate-300 text-xs font-mono font-semibold flex items-center justify-center gap-2 transition">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              <span>View Source on GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lab" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-950">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan text-xs font-mono">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 animate-spin"></i>
+          <span>LIVE RUNTIME SIMULATOR</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-display font-black text-white">Interactive Model Sandbox</h2>
+        <p class="text-sm text-slate-400 font-sans">
+          Execute client-side machine learning inference simulations. Test real-time LSTM price projections, evaluate customer review sentiment vectors, or observe an autonomous RL agent negotiating terrain.
+        </p>
+      </div>
+
+      <!-- Navigation Tabs for Sandbox Demos -->
+      <div class="flex justify-center">
+        <div class="flex items-center gap-2 p-1.5 rounded-2xl glass-hud text-xs font-mono">
+          <button id="btnDemoLstm" onclick="selectDemoTab('lstm')" class="px-4 py-2 rounded-xl bg-ai-cyan text-black font-bold flex items-center gap-2 transition shadow-glow-cyan">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span>LSTM Forecaster</span>
+          </button>
+          <button id="btnDemoNlp" onclick="selectDemoTab('nlp')" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white flex items-center gap-2 transition">
+            <i data-lucide="message-square" class="w-4 h-4"></i>
+            <span>NLP Sentiment</span>
+          </button>
+          <button id="btnDemoRl" onclick="selectDemoTab('rl')" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white flex items-center gap-2 transition">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+            <span>Deep RL Agent</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DEMO 1: Multi-Layer LSTM Stock Forecaster -->
+      <div id="containerDemoLstm" class="glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-display font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-ai-cyan animate-ping"></span>
+              Stacked LSTM Time-Series Forecaster
+            </h3>
+            <p class="text-xs text-slate-400 font-mono mt-0.5">Monte Carlo confidence bounds & multi-step trajectory inference</p>
+          </div>
+          <!-- Model Metrics HUD -->
+          <div class="flex items-center gap-4 text-xs font-mono">
+            <div class="bg-obsidian-950 px-3 py-1.5 rounded-xl border border-white/10">
+              <span class="text-slate-400">MSE: </span>
+              <span class="text-ai-cyan font-bold" id="metricMse">0.0028</span>
+            </div>
+            <div class="bg-obsidian-950 px-3 py-1.5 rounded-xl border border-white/10">
+              <span class="text-slate-400">RMSE: </span>
+              <span class="text-emerald-400 font-bold" id="metricRmse">0.0529</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Control Sliders -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-obsidian-950/90 border border-white/10 text-xs font-mono">
+          <div>
+            <label class="text-slate-400 block mb-1.5">Select Asset Feed</label>
+            <select id="lstmAsset" onchange="runLstmSimulation()" class="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:border-ai-cyan outline-none">
+              <option value="NVDA">NVDA (Nvidia AI Telemetry)</option>
+              <option value="AAPL">AAPL (Apple Inc)</option>
+              <option value="BTC">BTC / USD (High Frequency)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1.5">Horizon: <span id="labelHorizon" class="text-ai-cyan font-bold">30 Days</span></label>
+            <input type="range" id="inputHorizon" min="7" max="60" value="30" oninput="updateHorizonLabel(this.value)" class="w-full accent-ai-cyan cursor-pointer">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1.5">Stochastic Volatility: <span id="labelVol" class="text-ai-cyan font-bold">Medium</span></label>
+            <input type="range" id="inputVol" min="1" max="4" value="2" oninput="updateVolLabel(this.value)" class="w-full accent-ai-cyan cursor-pointer">
+          </div>
+          <div class="flex items-end">
+            <button onclick="runLstmSimulation(); playBlip(800);" class="w-full py-2 rounded-xl bg-gradient-to-r from-ai-cyan to-ai-blue text-black font-bold font-mono text-xs flex items-center justify-center gap-1.5 hover:shadow-glow-cyan transition active:scale-95">
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-black"></i>
+              <span>Compute Inferences</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chart.js Graph Canvas Container -->
+        <div class="relative w-full h-72 sm:h-80 bg-obsidian-950/90 rounded-2xl border border-white/10 p-3">
+          <canvas id="lstmChartCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- DEMO 2: NLP Review Sentiment & Intent Analyzer -->
+      <div id="containerDemoNlp" class="hidden glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+        <div>
+          <h3 class="text-xl font-display font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-ai-magenta animate-ping"></span>
+            Menu vs Delivery — NLP Polarity & Keyword Extraction
+          </h3>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">VADER compound scoring, token sentiment mapping, and latency separation</p>
+        </div>
+
+        <div class="space-y-4">
+          <textarea id="nlpInputText" rows="3" class="w-full bg-obsidian-950 border border-white/10 rounded-2xl p-4 text-sm text-slate-100 focus:outline-none focus:border-ai-magenta transition font-sans" placeholder="Paste or type any review (e.g. The smoked salmon bagel was exquisite and fresh, however delivery was postponed by 40 minutes and the box was crushed)..."></textarea>
+          
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex gap-2">
+              <button onclick="loadNlpPreset(1)" class="text-xs font-mono px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 hover:border-ai-magenta/40 text-slate-300">
+                Preset A (Mixed Experience)
+              </button>
+              <button onclick="loadNlpPreset(2)" class="text-xs font-mono px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 hover:border-ai-magenta/40 text-slate-300">
+                Preset B (Flawless Experience)
+              </button>
+            </div>
+            <button onclick="analyzeSentiment(); playBlip(780);" class="px-5 py-2 rounded-xl bg-gradient-to-r from-ai-violet to-ai-magenta text-white font-bold font-mono text-xs flex items-center gap-1.5 hover:shadow-glow-violet transition active:scale-95">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Evaluate Text Vector</span>
+            </button>
+          </div>
+
+          <!-- NLP Output Widgets -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/10">
+            <div class="bg-obsidian-950/80 p-5 rounded-2xl border border-white/5 text-center">
+              <span class="text-xs font-mono text-slate-400 block">VADER Compound Score</span>
+              <span id="nlpScoreVal" class="text-3xl font-mono font-bold text-ai-magenta mt-1">+0.48</span>
+              <span id="nlpSentimentTag" class="text-[11px] font-mono block text-emerald-400 mt-1">Positive Sentiment</span>
+            </div>
+
+            <div class="bg-obsidian-950/80 p-5 rounded-2xl border border-white/5 text-center">
+              <span class="text-xs font-mono text-slate-400 block">Culinary Satisfaction Index</span>
+              <span id="nlpMenuVal" class="text-3xl font-mono font-bold text-ai-cyan mt-1">92%</span>
+              <span class="text-[11px] font-mono block text-slate-400 mt-1">High Flavor Polarity</span>
+            </div>
+
+            <div class="bg-obsidian-950/80 p-5 rounded-2xl border border-white/5 text-center">
+              <span class="text-xs font-mono text-slate-400 block">Logistics & Delivery Friction</span>
+              <span id="nlpDeliveryVal" class="text-3xl font-mono font-bold text-rose-400 mt-1">36%</span>
+              <span id="nlpDeliveryTag" class="text-[11px] font-mono block text-rose-400/80 mt-1">Delay Friction Detected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEMO 3: Autonomous Hill Climb Deep RL Agent -->
+      <div id="containerDemoRl" class="hidden glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-display font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+              Neural Pilot — PPO Continuous Control Simulation
+            </h3>
+            <p class="text-xs text-slate-400 font-mono mt-0.5">Physics-coupled agent navigating sine terrain using shaped rewards</p>
+          </div>
+          <div class="flex items-center gap-3 font-mono text-xs">
+            <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-emerald-400" id="rlEpisodeCounter">Episode: 3,420</span>
+            <span class="px-3 py-1 rounded-xl bg-obsidian-950 border border-white/10 text-ai-cyan" id="rlRewardCounter">Cumulative Reward: +912.4</span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-72 sm:h-80 bg-obsidian-950 rounded-2xl border border-white/10 overflow-hidden">
+          <canvas id="rlPhysicsCanvas" class="w-full h-full"></canvas>
+          
+          <!-- Agent telemetry HUD in canvas -->
+          <div class="absolute top-3 left-3 bg-obsidian-950/90 border border-white/10 p-2.5 rounded-xl font-mono text-[10px] space-y-1">
+            <div class="text-slate-400">POLICY: <span class="text-emerald-400 font-bold">PPO-Actor-Critic</span></div>
+            <div class="text-slate-400">ACTION: <span class="text-ai-cyan" id="rlActionThrottle">THROTTLE: +0.82</span></div>
+            <div class="text-slate-400">PITCH ANGLE: <span class="text-yellow-400" id="rlPitchVal">+4.2°</span></div>
+          </div>
+
+          <div class="absolute bottom-3 right-3 flex gap-2">
+            <button onclick="resetRlSimulation(); playBlip(600);" class="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-mono text-xs flex items-center gap-1.5 transition">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Respawn Agent</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-24 px-4 relative z-20 border-t border-white/5 bg-obsidian-950/90">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div class="text-xs font-mono text-ai-cyan tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded bg-ai-cyan"></span>
+            <span>07 // CONTACT NEURAL GATEWAY</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mt-1">
+            Let's Collaborate
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-md">
+          Available for data science roles, ML research partnerships, and analytics advisory.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Direct Channel Cards -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- Email card with instant copy -->
+          <div class="glass-card p-6 rounded-3xl border-white/5 flex items-start gap-4">
+            <div class="p-3.5 rounded-2xl bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan shrink-0">
+              <i data-lucide="mail" class="w-6 h-6"></i>
+            </div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <span class="text-xs font-mono text-slate-400 block">DIRECT INBOX</span>
+              <a href="mailto:rakesh28.dev@gmail.com" class="text-sm sm:text-base font-mono font-bold text-white hover:text-ai-cyan transition truncate block">
+                rakesh28.dev@gmail.com
+              </a>
+              <div class="pt-2 flex items-center gap-3">
+                <a href="mailto:rakesh28.dev@gmail.com" onclick="playBlip(700)" class="text-xs font-mono text-ai-cyan hover:underline flex items-center gap-1">
+                  <span>Send Mail</span>
+                  <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+                </a>
+                <span class="text-slate-700">|</span>
+                <button onclick="copyDirectEmail(); playBlip(650);" class="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span id="copyEmailText">Copy Email</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- GitHub Profile -->
+          <a href="https://github.com/Rakesh-developer28" target="_blank" onclick="playBlip(600)" class="glass-card p-6 rounded-3xl border-white/5 flex items-start gap-4 hover:border-slate-500 transition group block">
+            <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-white shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="github" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs font-mono text-slate-400 block">SOURCE REPOSITORIES</span>
+              <h4 class="text-sm sm:text-base font-mono font-bold text-white group-hover:text-ai-cyan transition-colors">
+                github.com/Rakesh-developer28
+              </h4>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">@Rakesh-developer28 (Rakesh G)</p>
+            </div>
+          </a>
+
+          <!-- LinkedIn Profile -->
+          <a href="https://www.linkedin.com/in/rakesh366056/" target="_blank" onclick="playBlip(600)" class="glass-card p-6 rounded-3xl border-white/5 flex items-start gap-4 hover:border-ai-blue/40 transition group block">
+            <div class="p-3.5 rounded-2xl bg-ai-blue/10 border border-ai-blue/30 text-ai-blue shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="linkedin" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs font-mono text-slate-400 block">PROFESSIONAL NETWORK</span>
+              <h4 class="text-sm sm:text-base font-mono font-bold text-white group-hover:text-ai-cyan transition-colors">
+                linkedin.com/in/rakesh366056
+              </h4>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Connect on LinkedIn</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Contact Transmission Form -->
+        <div class="lg:col-span-7 glass-hud p-8 rounded-3xl space-y-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-display font-bold text-white">Transmit Message</h3>
+            <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>GATEWAY ACTIVE</span>
+            </span>
+          </div>
+
+          <form onsubmit="handleFormSubmission(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Your Name</label>
+                <input type="text" required id="formName" class="w-full bg-obsidian-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-ai-cyan transition" placeholder="e.g. Dr. Jane Smith">
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Your Email</label>
+                <input type="email" required id="formEmail" class="w-full bg-obsidian-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-ai-cyan transition" placeholder="jane@enterprise.ai">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Inquiry Scope</label>
+              <select id="formScope" class="w-full bg-obsidian-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-ai-cyan transition font-sans">
+                <option>Full-Time AI / Data Science Role</option>
+                <option>Research Collaboration / Academic Publishing</option>
+                <option>Deep Learning & Predictive Modeling Advisory</option>
+                <option>Freelance Analytics & ETL Development</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Message Payload</label>
+              <textarea rows="4" required id="formMsg" class="w-full bg-obsidian-950 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-ai-cyan transition font-sans" placeholder="Detail the role specifications, telemetry data, or project vision..."></textarea>
+            </div>
+
+            <button type="submit" id="btnFormSubmit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ai-cyan via-ai-blue to-ai-violet text-black font-mono font-bold text-xs uppercase tracking-wider hover:shadow-glow-cyan transition flex items-center justify-center gap-2 active:scale-95">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Dispatch Encrypted Transmission</span>
+            </button>
+
+            <div id="formStatusMsg" class="hidden p-3 rounded-xl text-center text-xs font-mono"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="terminalModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-2xl bg-obsidian-950 border border-ai-cyan/40 rounded-3xl shadow-2xl shadow-ai-cyan/20 overflow-hidden flex flex-col h-[560px]">
+      <!-- Terminal Window Bar -->
+      <div class="px-5 py-3.5 bg-obsidian-900 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-rose-500 cursor-pointer" onclick="toggleTerminal()"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+          <span class="ml-3 font-mono text-xs text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="bot" class="w-3.5 h-3.5 text-ai-cyan"></i>
+            <span>RAKESH-GPT // Neural Agent v2.4</span>
+          </span>
+        </div>
+        <button onclick="toggleTerminal(); playBlip(500);" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Terminal Output Scroll Container -->
+      <div id="terminalOutput" class="flex-1 p-5 overflow-y-auto font-mono text-xs text-slate-300 space-y-4">
+        <div class="p-3 rounded-xl bg-obsidian-900/90 border border-white/5 text-slate-400">
+          Welcome to <strong class="text-ai-cyan">RAKESH-GPT</strong>. I am trained on Rakesh G's academic dossier, technical skill vectors, and project architectures. Select a prompt or type your query below.
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div class="px-5 py-2 bg-obsidian-900/50 border-t border-white/5 flex flex-wrap gap-2 text-[11px] font-mono">
+        <button onclick="askTerminalPreset('Summarize Rakesh in 3 bullets')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-ai-cyan/20 text-slate-300 hover:text-ai-cyan border border-white/5 transition">
+          ⚡ 3-Bullet Summary
+        </button>
+        <button onclick="askTerminalPreset('Show Tech Stack')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-ai-cyan/20 text-slate-300 hover:text-ai-cyan border border-white/5 transition">
+          🛠 Tech Stack
+        </button>
+        <button onclick="askTerminalPreset('Why hire for Deep RL?')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-ai-cyan/20 text-slate-300 hover:text-ai-cyan border border-white/5 transition">
+          🧠 Why Deep RL?
+        </button>
+        <button onclick="askTerminalPreset('Download Contact details')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-ai-cyan/20 text-slate-300 hover:text-ai-cyan border border-white/5 transition">
+          📇 Contact Info
+        </button>
+      </div>
+
+      <!-- Input Field -->
+      <div class="p-4 bg-obsidian-900 border-t border-white/10 flex items-center gap-2">
+        <span class="text-ai-cyan font-mono text-sm">></span>
+        <input type="text" id="terminalInput" onkeydown="if(event.key==='Enter') sendTerminalQuery()" placeholder="Type a question for RAKESH-GPT..." class="flex-1 bg-transparent border-none text-white text-xs font-mono focus:outline-none placeholder:text-slate-600">
+        <button onclick="sendTerminalQuery(); playBlip(700);" class="p-2 rounded-xl bg-ai-cyan text-black hover:bg-ai-blue transition">
+          <i data-lucide="corner-down-left" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-8 px-4 border-t border-white/5 bg-obsidian-950 text-slate-500 font-mono text-xs relative z-20">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-slate-400">Rakesh G © 2026 // Next-Generation AI Portfolio Dossier</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <span class="text-ai-cyan">PMIST Informatics Scholar</span>
+        <span>•</span>
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'}); playBlip(550);" class="text-slate-400 hover:text-ai-cyan flex items-center gap-1 transition">
+          <span>Back to Top</span>
+          <i data-lucide="arrow-up" class="w-3 h-3"></i>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ========================================================
+       1. WEB AUDIO API SYNTHESIZER FOR SUBTLE SFX
+       ======================================================== */
+    let audioContext = null;
+    let sfxEnabled = true;
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudio() {
+      sfxEnabled = !sfxEnabled;
+      const text = document.getElementById('audioStateText');
+      const icon = document.getElementById('audioIcon');
+      if (sfxEnabled) {
+        text.textContent = 'SFX: ON';
+        playBlip(700);
+      } else {
+        text.textContent = 'SFX: MUTED';
+      }
+    }
+
+    function playBlip(freq = 550, duration = 0.04) {
+      if (!sfxEnabled) return;
+      try {
+        initAudio();
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.8, audioContext.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.04, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start();
+        osc.stop(audioContext.currentTime + duration);
+      } catch (e) {
+        // audio failsafe
+      }
+    }
+
+    /* ========================================================
+       2. THREE.JS 3D NEURAL LATENT SPACE FIELD
+       ======================================================== */
+    let scene, camera, renderer, nodePoints, linesMesh;
+    const container = document.getElementById('threeContainer');
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+
+    function initThreeHero() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 240;
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Generate Node Constellation
+      const nodeCount = 130;
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(nodeCount * 3);
+      const velocities = [];
+
+      for (let i = 0; i < nodeCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 380;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 260;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+        velocities.push({
+          x: (Math.random() - 0.5) * 0.35,
+          y: (Math.random() - 0.5) * 0.35,
+          z: (Math.random() - 0.5) * 0.35
+        });
+      }
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      // Circular glowing point material
+      const pointMaterial = new THREE.PointsMaterial({
+        color: 0x00f2fe,
+        size: 3.5,
+        transparent: true,
+        opacity: 0.85
+      });
+      nodePoints = new THREE.Points(geometry, pointMaterial);
+      scene.add(nodePoints);
+
+      // Line mesh for synapses
+      const maxLines = 450;
+      const linePositions = new Float32Array(maxLines * 6);
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
+      const lineMaterial = new THREE.LineBasicMaterial({
+        color: 0x4facfe,
+        transparent: true,
+        opacity: 0.18
+      });
+      linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+      scene.add(linesMesh);
+
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onDocumentMouseMove);
+
+      function animateThree() {
+        requestAnimationFrame(animateThree);
+
+        const posAttr = nodePoints.geometry.attributes.position;
+        const linePosAttr = linesMesh.geometry.attributes.position;
+        let lineIdx = 0;
+
+        for (let i = 0; i < nodeCount; i++) {
+          posAttr.array[i * 3] += velocities[i].x;
+          posAttr.array[i * 3 + 1] += velocities[i].y;
+          posAttr.array[i * 3 + 2] += velocities[i].z;
+
+          if (Math.abs(posAttr.array[i * 3]) > 200) velocities[i].x *= -1;
+          if (Math.abs(posAttr.array[i * 3 + 1]) > 140) velocities[i].y *= -1;
+          if (Math.abs(posAttr.array[i * 3 + 2]) > 120) velocities[i].z *= -1;
+
+          // Connect nearby nodes
+          for (let j = i + 1; j < nodeCount; j++) {
+            const dx = posAttr.array[i * 3] - posAttr.array[j * 3];
+            const dy = posAttr.array[i * 3 + 1] - posAttr.array[j * 3 + 1];
+            const dz = posAttr.array[i * 3 + 2] - posAttr.array[j * 3 + 2];
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            if (dist < 55 && lineIdx < maxLines * 6) {
+              linePosAttr.array[lineIdx++] = posAttr.array[i * 3];
+              linePosAttr.array[lineIdx++] = posAttr.array[i * 3 + 1];
+              linePosAttr.array[lineIdx++] = posAttr.array[i * 3 + 2];
+
+              linePosAttr.array[lineIdx++] = posAttr.array[j * 3];
+              linePosAttr.array[lineIdx++] = posAttr.array[j * 3 + 1];
+              linePosAttr.array[lineIdx++] = posAttr.array[j * 3 + 2];
+            }
+          }
+        }
+        posAttr.needsUpdate = true;
+        linePosAttr.needsUpdate = true;
+
+        // Smooth camera drift based on mouse
+        targetX = mouseX * 0.0004;
+        targetY = mouseY * 0.0004;
+        scene.rotation.y += 0.0015;
+        scene.rotation.x += (targetY - scene.rotation.x) * 0.05;
+        scene.rotation.y += (targetX - scene.rotation.y) * 0.05;
+
+        renderer.render(scene, camera);
+      }
+      animateThree();
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onDocumentMouseMove(e) {
+      mouseX = (e.clientX - window.innerWidth / 2);
+      mouseY = (e.clientY - window.innerHeight / 2);
+    }
+
+    window.addEventListener('load', initThreeHero);
+
+    /* ========================================================
+       3. CUSTOM AI CURSOR LOGIC
+       ======================================================== */
+    const cursorRing = document.getElementById('cursorRing');
+    const cursorDot = document.getElementById('cursorDot');
+
+    window.addEventListener('mousemove', (e) => {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      
+      setTimeout(() => {
+        cursorRing.style.left = e.clientX + 'px';
+        cursorRing.style.top = e.clientY + 'px';
+      }, 40);
+    });
+
+    document.querySelectorAll('a, button, input, textarea, select').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorRing.style.width = '42px';
+        cursorRing.style.height = '42px';
+        cursorRing.style.borderColor = '#00f2fe';
+        cursorRing.style.backgroundColor = 'rgba(0, 242, 254, 0.1)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorRing.style.width = '24px';
+        cursorRing.style.height = '24px';
+        cursorRing.style.borderColor = '#00f2fe';
+        cursorRing.style.backgroundColor = 'transparent';
+      });
+    });
+
+    /* ========================================================
+       4. REAL-TIME CLOCK & LATENCY PING JITTER
+       ======================================================== */
+    function updateClock() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      document.getElementById('liveClock').textContent = `IST ${now.toLocaleTimeString('en-US', options)}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function jitterPing() {
+      const p = Math.floor(Math.random() * 6) + 11;
+      document.getElementById('livePing').textContent = `${p}ms`;
+    }
+    setInterval(jitterPing, 4000);
+
+    /* ========================================================
+       5. PROJECT CATEGORY FILTERING
+       ======================================================== */
+    function filterProjects(cat, btn) {
+      document.querySelectorAll('.proj-filter').forEach(b => {
+        b.classList.remove('bg-ai-cyan', 'text-black', 'font-bold');
+        b.classList.add('text-slate-400');
+      });
+      btn.classList.add('bg-ai-cyan', 'text-black', 'font-bold');
+      btn.classList.remove('text-slate-400');
+
+      document.querySelectorAll('.project-box').forEach(box => {
+        if (cat === 'all' || box.getAttribute('data-cat') === cat) {
+          box.classList.remove('hidden');
+        } else {
+          box.classList.add('hidden');
+        }
+      });
+      playBlip(550);
+    }
+
+    /* ========================================================
+       6. INTERACTIVE ML LAB DEMO TABS
+       ======================================================== */
+    function selectDemoTab(tab) {
+      document.getElementById('containerDemoLstm').classList.add('hidden');
+      document.getElementById('containerDemoNlp').classList.add('hidden');
+      document.getElementById('containerDemoRl').classList.add('hidden');
+
+      const tabs = [
+        { id: 'lstm', btn: 'btnDemoLstm', el: 'containerDemoLstm' },
+        { id: 'nlp', btn: 'btnDemoNlp', el: 'containerDemoNlp' },
+        { id: 'rl', btn: 'btnDemoRl', el: 'containerDemoRl' }
+      ];
+
+      tabs.forEach(t => {
+        const b = document.getElementById(t.btn);
+        if (t.id === tab) {
+          document.getElementById(t.el).classList.remove('hidden');
+          b.className = "px-4 py-2 rounded-xl bg-ai-cyan text-black font-bold flex items-center gap-2 transition shadow-glow-cyan";
+        } else {
+          b.className = "px-4 py-2 rounded-xl text-slate-400 hover:text-white flex items-center gap-2 transition";
+        }
+      });
+
+      if (tab === 'lstm') runLstmSimulation();
+      if (tab === 'rl') startRlPhysics();
+      playBlip(620);
+    }
+
+    function launchLab(tab) {
+      const el = document.getElementById('lab');
+      el.scrollIntoView({ behavior: 'smooth' });
+      selectDemoTab(tab);
+    }
+
+    /* ========================================================
+       7. DEMO A: CHART.JS LSTM PRICE FORECAST SIMULATION
+       ======================================================== */
+    let lstmChart = null;
+
+    function updateHorizonLabel(val) {
+      document.getElementById('labelHorizon').textContent = `${val} Days`;
+      runLstmSimulation();
+    }
+    function updateVolLabel(val) {
+      const map = { '1': 'Low (0.8%)', '2': 'Medium (2.4%)', '3': 'High (4.8%)', '4': 'Crypto-Level (8.5%)' };
+      document.getElementById('labelVol').textContent = map[val];
+      runLstmSimulation();
+    }
+
+    function runLstmSimulation() {
+      const days = parseInt(document.getElementById('inputHorizon').value);
+      const volMultiplier = parseInt(document.getElementById('inputVol').value) * 1.8;
+      const asset = document.getElementById('lstmAsset').value;
+
+      const labels = [];
+      const historicalData = [];
+      const predictedData = [];
+      const upperConfidence = [];
+      const lowerConfidence = [];
+
+      let basePrice = asset === 'NVDA' ? 128 : asset === 'AAPL' ? 220 : 64000;
+      const totalPoints = 40;
+
+      // Historical sequence
+      for (let i = 0; i < totalPoints; i++) {
+        labels.push(`T-${totalPoints - i}`);
+        basePrice += (Math.sin(i / 3) * (basePrice * 0.015)) + (Math.random() - 0.48) * (basePrice * 0.02);
+        historicalData.push(basePrice.toFixed(2));
+        predictedData.push(null);
+        upperConfidence.push(null);
+        lowerConfidence.push(null);
+      }
+
+      // Predicted sequence continuation
+      let currentPred = basePrice;
+      labels.push(`Now`);
+      historicalData.push(currentPred.toFixed(2));
+      predictedData.push(currentPred.toFixed(2));
+      upperConfidence.push(currentPred.toFixed(2));
+      lowerConfidence.push(currentPred.toFixed(2));
+
+      for (let j = 1; j <= days; j++) {
+        labels.push(`D+${j}`);
+        historicalData.push(null);
+        currentPred += (Math.sin(j / 2) * (currentPred * 0.012)) + (Math.random() - 0.46) * (volMultiplier * 0.5);
+        predictedData.push(currentPred.toFixed(2));
+
+        const coneSpread = Math.sqrt(j) * (volMultiplier * 1.8);
+        upperConfidence.push((currentPred + coneSpread).toFixed(2));
+        lowerConfidence.push((currentPred - coneSpread).toFixed(2));
+      }
+
+      // Update Random MSE/RMSE
+      document.getElementById('metricMse').textContent = (0.0021 + Math.random() * 0.0015).toFixed(4);
+      document.getElementById('metricRmse').textContent = (0.045 + Math.random() * 0.015).toFixed(4);
+
+      const ctx = document.getElementById('lstmChartCanvas').getContext('2d');
+
+      if (lstmChart) {
+        lstmChart.destroy();
+      }
+
+      lstmChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Historical Ground Truth',
+              data: historicalData,
+              borderColor: '#94a3b8',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.2
+            },
+            {
+              label: 'LSTM Prediction Model',
+              data: predictedData,
+              borderColor: '#00f2fe',
+              backgroundColor: 'rgba(0, 242, 254, 0.05)',
+              borderWidth: 2.5,
+              pointRadius: 0,
+              tension: 0.3
+            },
+            {
+              label: 'Upper 95% Confidence Cone',
+              data: upperConfidence,
+              borderColor: 'rgba(79, 172, 254, 0.3)',
+              borderDash: [4, 4],
+              borderWidth: 1,
+              pointRadius: 0,
+              fill: '+1',
+              backgroundColor: 'rgba(79, 172, 254, 0.08)'
+            },
+            {
+              label: 'Lower 95% Confidence Cone',
+              data: lowerConfidence,
+              borderColor: 'rgba(79, 172, 254, 0.3)',
+              borderDash: [4, 4],
+              borderWidth: 1,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 10 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 12 }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 9 } }
+            }
+          }
+        }
+      });
+    }
+
+    /* ========================================================
+       8. DEMO B: NLP REVIEW SENTIMENT & TOKEN ANALYZER
+       ======================================================== */
+    function loadNlpPreset(type) {
+      const input = document.getElementById('nlpInputText');
+      if (type === 1) {
+        input.value = "The butter chicken was sensational with authentic roasted spices, but delivery arrived 55 minutes overdue and was lukewarm.";
+      } else {
+        input.value = "Unbelievable efficiency! The wood-fired pizza was piping hot, crust was crispy, and the driver arrived in under 18 minutes.";
+      }
+      analyzeSentiment();
+    }
+
+    function analyzeSentiment() {
+      const text = document.getElementById('nlpInputText').value.toLowerCase();
+      const posWords = ['sensational', 'authentic', 'delicious', 'unbelievable', 'crispy', 'hot', 'piping', 'efficiency', 'exquisite', 'great', 'fresh', 'best'];
+      const negWords = ['overdue', 'lukewarm', 'minutes', 'late', 'delayed', 'crushed', 'cold', 'bad', 'slow', 'postponed', 'leak'];
+
+      let posCount = 0;
+      let negCount = 0;
+
+      posWords.forEach(w => { if (text.includes(w)) posCount++; });
+      negWords.forEach(w => { if (text.includes(w)) negCount++; });
+
+      let score = (posCount - negCount) / Math.max(1, (posCount + negCount));
+      if (posCount === 0 && negCount === 0) score = 0.12;
+
+      const scoreEl = document.getElementById('nlpScoreVal');
+      const tagEl = document.getElementById('nlpSentimentTag');
+      scoreEl.textContent = (score > 0 ? "+" : "") + score.toFixed(2);
+
+      if (score > 0.3) {
+        tagEl.textContent = "Positive Sentiment Vector";
+        tagEl.className = "text-[11px] font-mono block text-emerald-400 mt-1";
+      } else if (score < -0.1) {
+        tagEl.textContent = "Negative Sentiment Vector";
+        tagEl.className = "text-[11px] font-mono block text-rose-400 mt-1";
+      } else {
+        tagEl.textContent = "Mixed / Bimodal Polarity";
+        tagEl.className = "text-[11px] font-mono block text-yellow-400 mt-1";
+      }
+
+      const menuPos = text.includes('chicken') || text.includes('pizza') || text.includes('hot') || text.includes('crispy') || text.includes('authentic');
+      document.getElementById('nlpMenuVal').textContent = menuPos ? '95%' : '78%';
+
+      const delNeg = text.includes('overdue') || text.includes('late') || text.includes('delayed') || text.includes('55') || text.includes('minutes');
+      document.getElementById('nlpDeliveryVal').textContent = delNeg ? '32%' : '94%';
+      document.getElementById('nlpDeliveryTag').textContent = delNeg ? 'Delivery Latency Friction' : 'Optimal Transit Velocity';
+    }
+
+    /* ========================================================
+       9. DEMO C: AUTONOMOUS HILL-CLIMB RL (PPO) PHYSICS
+       ======================================================== */
+    const rlCanvas = document.getElementById('rlPhysicsCanvas');
+    const rlCtx = rlCanvas.getContext('2d');
+    let rlAnim;
+    let agentState = { x: 30, y: 150, vx: 2.2, pitch: 0 };
+    let epCount = 3420;
+
+    function startRlPhysics() {
+      const rect = rlCanvas.parentElement.getBoundingClientRect();
+      rlCanvas.width = rect.width;
+      rlCanvas.height = rect.height;
+
+      if (rlAnim) cancelAnimationFrame(rlAnim);
+
+      function step() {
+        rlCtx.clearRect(0, 0, rlCanvas.width, rlCanvas.height);
+
+        // Draw sine mountain terrain
+        rlCtx.beginPath();
+        rlCtx.moveTo(0, rlCanvas.height);
+        for (let x = 0; x <= rlCanvas.width; x += 8) {
+          const y = rlCanvas.height - 45 - Math.sin(x * 0.016) * 40 - Math.cos(x * 0.035) * 18;
+          rlCtx.lineTo(x, y);
+        }
+        rlCtx.lineTo(rlCanvas.width, rlCanvas.height);
+        rlCtx.fillStyle = '#060a12';
+        rlCtx.fill();
+        rlCtx.strokeStyle = '#10b981';
+        rlCtx.lineWidth = 2.5;
+        rlCtx.stroke();
+
+        // Advance agent
+        agentState.x += agentState.vx;
+        const currentGroundY = rlCanvas.height - 45 - Math.sin(agentState.x * 0.016) * 40 - Math.cos(agentState.x * 0.035) * 18;
+        agentState.y = currentGroundY - 8;
+
+        // Derivative for pitch angle
+        const dy = (-Math.cos(agentState.x * 0.016) * 0.016 * 40) + (Math.sin(agentState.x * 0.035) * 0.035 * 18);
+        agentState.pitch = Math.atan(dy) * (180 / Math.PI);
+        document.getElementById('rlPitchVal').textContent = `${agentState.pitch.toFixed(1)}°`;
+
+        // Render Agent body
+        rlCtx.save();
+        rlCtx.translate(agentState.x, agentState.y);
+        rlCtx.rotate(Math.atan(dy));
+
+        // Chassis
+        rlCtx.fillStyle = '#00f2fe';
+        rlCtx.fillRect(-12, -7, 24, 8);
+        // Wheels
+        rlCtx.fillStyle = '#ffffff';
+        rlCtx.beginPath();
+        rlCtx.arc(-8, 3, 3.5, 0, Math.PI * 2);
+        rlCtx.arc(8, 3, 3.5, 0, Math.PI * 2);
+        rlCtx.fill();
+        rlCtx.restore();
+
+        // Goal Post
+        const goalX = rlCanvas.width - 50;
+        const goalY = rlCanvas.height - 45 - Math.sin(goalX * 0.016) * 40 - Math.cos(goalX * 0.035) * 18;
+        rlCtx.fillStyle = '#ef4444';
+        rlCtx.fillRect(goalX, goalY - 24, 14, 9);
+        rlCtx.strokeStyle = '#94a3b8';
+        rlCtx.beginPath();
+        rlCtx.moveTo(goalX, goalY);
+        rlCtx.lineTo(goalX, goalY - 26);
+        rlCtx.stroke();
+
+        // Episode loop
+        if (agentState.x > rlCanvas.width - 40) {
+          agentState.x = 30;
+          epCount++;
+          document.getElementById('rlEpisodeCounter').textContent = `Episode: ${epCount.toLocaleString()}`;
+        }
+
+        rlAnim = requestAnimationFrame(step);
+      }
+      step();
+    }
+
+    function resetRlSimulation() {
+      agentState.x = 30;
+      epCount++;
+      document.getElementById('rlEpisodeCounter').textContent = `Episode: ${epCount.toLocaleString()}`;
+    }
+
+    /* ========================================================
+       10. AI TERMINAL / COPILOT (RAKESH-GPT) MODAL LOGIC
+       ======================================================== */
+    const terminalModal = document.getElementById('terminalModal');
+    const terminalOutput = document.getElementById('terminalOutput');
+    const terminalInput = document.getElementById('terminalInput');
+
+    function toggleTerminal() {
+      terminalModal.classList.toggle('hidden');
+      terminalModal.classList.toggle('flex');
+      if (!terminalModal.classList.contains('hidden')) {
+        terminalInput.focus();
+      }
+    }
+
+    function askTerminalPreset(query) {
+      terminalInput.value = query;
+      sendTerminalQuery();
+    }
+
+    function sendTerminalQuery() {
+      const q = terminalInput.value.trim();
+      if (!q) return;
+
+      // Append user query bubble
+      const userDiv = document.createElement('div');
+      userDiv.className = 'flex items-start gap-2 justify-end text-right';
+      userDiv.innerHTML = `
+        <div class="p-3 rounded-2xl bg-ai-cyan/10 border border-ai-cyan/30 text-ai-cyan">
+          ${q}
+        </div>
+      `;
+      terminalOutput.appendChild(userDiv);
+      terminalInput.value = '';
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+
+      // Simulated streaming AI response
+      setTimeout(() => {
+        let answer = "";
+        const lower = q.toLowerCase();
+
+        if (lower.includes('3') || lower.includes('summarize')) {
+          answer = "• **Academic Core**: M.Sc. Data Science candidate at PMIST holding an 8.8 CGPA baseline, elected Department President.\n• **Industrial Validation**: 4 internships spanning Rexroth Bosch Group (IoT predictive maintenance) and Tech Vaseegrah.\n• **Algorithmic Specialization**: Production implementations across Multi-layer LSTM forecasting, PPO Deep RL agents, and VADER/TF-IDF sentiment extraction.";
+        } else if (lower.includes('stack') || lower.includes('tech')) {
+          answer = "• **Languages**: Python (NumPy/Pandas/Scikit-learn), R, SQL, ES6+ JavaScript, HTML5/CSS3.\n• **Deep Learning**: LSTM Networks, Deep RL (PPO with Pymunk 2D), Transformers & Attention mechanisms.\n• **Data Engineering**: Neo4j (Graph DB), Star/Snowflake schemas, Power BI, Advanced Excel, Flask, SQLite.";
+        } else if (lower.includes('rl') || lower.includes('reinforcement')) {
+          answer = "Rakesh engineered **Neural Pilot**, an autonomous hill-climbing vehicle agent using Proximal Policy Optimization (PPO). The project leverages custom reward shaping in 2D continuous physics environments to conquer terrain with minimal episode divergence.";
+        } else if (lower.includes('contact') || lower.includes('vcard') || lower.includes('email')) {
+          answer = "• **Email**: rakesh28.dev@gmail.com\n• **GitHub**: github.com/Rakesh-developer28\n• **LinkedIn**: linkedin.com/in/rakesh366056\n• **Location**: India (IST / UTC+5:30)";
+        } else {
+          answer = `I have analyzed Rakesh G's engineering repository for query "${q}". Rakesh combines rigorous mathematical theory from his M.Sc. at PMIST with enterprise IoT analytics at Rexroth Bosch and agentic modeling at ESOL Technologies. Feel free to connect directly via rakesh28.dev@gmail.com!`;
+        }
+
+        const botDiv = document.createElement('div');
+        botDiv.className = 'flex items-start gap-2 text-left';
+        botDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-ai-violet/20 border border-ai-violet/40 text-ai-violet flex items-center justify-center font-bold text-[10px] shrink-0 mt-1">
+            RG
+          </div>
+          <div class="p-3 rounded-2xl bg-obsidian-900 border border-white/10 text-slate-200 leading-relaxed space-y-1">
+            ${answer.replace(/\n/g, '<br>')}
+          </div>
+        `;
+        terminalOutput.appendChild(botDiv);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        playBlip(680);
+      }, 350);
+    }
+
+    /* ========================================================
+       11. FORM TRANSMISSION & CLIPBOARD UTILITIES
+       ======================================================== */
+    function copyDirectEmail() {
+      const text = "rakesh28.dev@gmail.com";
+      const dummy = document.createElement("input");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      const copyLabel = document.getElementById('copyEmailText');
+      copyLabel.textContent = "Copied to Clipboard!";
+      setTimeout(() => { copyLabel.textContent = "Copy Email"; }, 2200);
+    }
+
+    function handleFormSubmission(e) {
+      e.preventDefault();
+      const status = document.getElementById('formStatusMsg');
+      const submitBtn = document.getElementById('btnFormSubmit');
+
+      submitBtn.innerHTML = `
+        <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+        <span>Encrypting Payload...</span>
+      `;
+      lucide.createIcons();
+      playBlip(750);
+
+      setTimeout(() => {
+        status.classList.remove('hidden');
+        status.className = "p-3 rounded-xl text-center text-xs font-mono bg-emerald-950/80 text-emerald-400 border border-emerald-500/30";
+        status.textContent = "✓ Transmission dispatched successfully to rakesh28.dev@gmail.com. Expect response within 12 hours.";
+        
+        submitBtn.innerHTML = `
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Message Dispatched</span>
+        `;
+        lucide.createIcons();
+        playBlip(880);
+      }, 1000);
+    }
+
+    // Initialize Mobile Nav Toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+      playBlip(500);
+    });
+
+    // Boot initial Chart.js simulator on load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(runLstmSimulation, 300);
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
